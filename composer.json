@@ -1,0 +1,10 @@
+{
+    "name": "andrii/paysera",
+    "autoload": {
+        "psr-4": {"Task\\": "src/"}
+    },
+    "require": {
+        "phpunit/phpunit": "^8.5",
+        "php-di/php-di": "^6.2"
+    }
+}
