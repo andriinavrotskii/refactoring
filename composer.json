@@ -5,6 +5,8 @@
     },
     "require": {
         "phpunit/phpunit": "^8.5",
-        "php-di/php-di": "^6.2"
+        "php-di/php-di": "^6.2",
+        "ext-json": "^1.6",
+        "moneyphp/money": "^3.3"
     }
 }

@@ -6,4 +6,6 @@ $container = new DI\Container();
 
 $command = $container->get(Task\Command\TransactionCommissionsCommand::class);
 
-$command->run();
+list($script, $param) = $argv;
+
+$command->run(__DIR__ . '/' .$param);
