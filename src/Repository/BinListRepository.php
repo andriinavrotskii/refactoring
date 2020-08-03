@@ -2,11 +2,9 @@
 
 namespace Task\Repository;
 
-use Task\DTO\BinListDTO;
 use Task\Exception\NotFoundException;
 use Task\Exception\UrlClientException;
 use Task\Facade\UrlClientFacade;
-use Task\Factory\BinListDTOFactory;
 
 class BinListRepository
 {
@@ -18,21 +16,12 @@ class BinListRepository
     private $urlClientFacade;
 
     /**
-     * @var BinListDTOFactory
-     */
-    private $binListDTOFactory;
-
-    /**
      * BinListRepository constructor.
      * @param UrlClientFacade $urlClientFacade
-     * @param BinListDTOFactory $binListDTOFactory
      */
-    public function __construct(
-        UrlClientFacade $urlClientFacade,
-        BinListDTOFactory $binListDTOFactory
-    ) {
+    public function __construct(UrlClientFacade $urlClientFacade)
+    {
         $this->urlClientFacade = $urlClientFacade;
-        $this->binListDTOFactory = $binListDTOFactory;
     }
 
     /**

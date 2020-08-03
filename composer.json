@@ -9,6 +9,7 @@
         "ext-json": "^1.6",
         "moneyphp/money": "^3.3",
         "guzzlehttp/guzzle": "^7.0",
-        "bensampo/laravel-enum": "^2.1"
+        "bensampo/laravel-enum": "^2.1",
+        "psr/log": "^1.1"
     }
 }

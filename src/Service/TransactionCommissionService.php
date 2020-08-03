@@ -2,31 +2,56 @@
 
 namespace Task\Service;
 
+use Money\Money;
 use Task\DTO\InputTransactionsDTO;
 use Task\Enum\CounryCodeEnum;
 use Task\Repository\BinListRepository;
+use Task\Repository\ExchangeRateRepository;
 
 class TransactionCommissionService
 {
+    private const COEFFICIENT_EU = 0.01;
+    private const COEFFICIENT_NON_EU = 0.02;
+
     /**
      * @var BinListRepository
      */
     private $binlistRepository;
 
+    /**
+     * @var ExchangeRateRepository
+     */
+    private $exchangeRateRepository;
+
     public function __construct(
-        BinListRepository $binlistRepository
+        BinListRepository $binlistRepository,
+        ExchangeRateRepository  $exchangeRateRepository
     ) {
 
         $this->binlistRepository = $binlistRepository;
+        $this->exchangeRateRepository = $exchangeRateRepository;
     }
 
     /**
      * @param InputTransactionsDTO $dto
+     * @return Money
+     * @throws \Task\Exception\NotFoundException
+     * @throws \Task\Exception\UrlClientException
      */
-    public function process(InputTransactionsDTO $dto): void
+    public function process(InputTransactionsDTO $dto): Money
     {
+        $rate = $this->exchangeRateRepository->getRate($dto->getMoney()->getCurrency());
         $isEu = $this->isEu($dto);
-//        var_dump($dto);
+
+        $resultAmount = $dto->getMoney()->multiply($rate);
+
+        if (true === $isEu) {
+            $resultAmount = $resultAmount->multiply(self::COEFFICIENT_EU);
+        } else {
+            $resultAmount = $resultAmount->multiply(self::COEFFICIENT_NON_EU);
+        }
+
+        return $resultAmount;
     }
 
     /**
