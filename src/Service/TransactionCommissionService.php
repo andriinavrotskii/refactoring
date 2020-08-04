@@ -5,8 +5,12 @@ namespace Task\Service;
 use Money\Money;
 use Task\DTO\InputTransactionsDTO;
 use Task\Enum\CounryCodeEnum;
+use Task\Exception\NotFoundException;
+use Task\Exception\UrlClientException;
 use Task\Repository\BinListRepository;
+use Task\Repository\BinListRepositoryInterface;
 use Task\Repository\ExchangeRateRepository;
+use Task\Repository\ExchangeRateRepositoryInterface;
 use Task\ValueObject\Bin;
 
 class TransactionCommissionService
@@ -15,18 +19,18 @@ class TransactionCommissionService
     private const COEFFICIENT_NON_EU = 0.02;
 
     /**
-     * @var BinListRepository
+     * @var BinListRepositoryInterface
      */
     private $binlistRepository;
 
     /**
-     * @var ExchangeRateRepository
+     * @var ExchangeRateRepositoryInterface
      */
     private $exchangeRateRepository;
 
     public function __construct(
-        BinListRepository $binlistRepository,
-        ExchangeRateRepository  $exchangeRateRepository
+        BinListRepositoryInterface $binlistRepository,
+        ExchangeRateRepositoryInterface $exchangeRateRepository
     ) {
 
         $this->binlistRepository = $binlistRepository;
@@ -36,8 +40,8 @@ class TransactionCommissionService
     /**
      * @param InputTransactionsDTO $dto
      * @return float
-     * @throws \Task\Exception\NotFoundException
-     * @throws \Task\Exception\UrlClientException
+     * @throws NotFoundException
+     * @throws UrlClientException
      */
     public function process(InputTransactionsDTO $dto): float
     {
@@ -58,8 +62,8 @@ class TransactionCommissionService
     /**
      * @param Bin $bin
      * @return bool
-     * @throws \Task\Exception\NotFoundException
-     * @throws \Task\Exception\UrlClientException
+     * @throws NotFoundException
+     * @throws UrlClientException
      */
     public function isEu(Bin $bin): bool
     {

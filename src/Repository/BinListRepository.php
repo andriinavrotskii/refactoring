@@ -7,7 +7,7 @@ use Task\Exception\UrlClientException;
 use Task\Facade\UrlClientFacade;
 use Task\ValueObject\Bin;
 
-class BinListRepository
+class BinListRepository implements BinListRepositoryInterface
 {
     private const URL = 'https://lookup.binlist.net/';
 
@@ -17,16 +17,16 @@ class BinListRepository
     private $urlClientFacade;
 
     /**
-     * @var StorageRepository
+     * @var CacheRepository
      */
     private $storageRepository;
 
     /**
      * BinListRepository constructor.
      * @param UrlClientFacade $urlClientFacade
-     * @param StorageRepository $storageRepository
+     * @param CacheRepository $storageRepository
      */
-    public function __construct(UrlClientFacade $urlClientFacade, StorageRepository $storageRepository)
+    public function __construct(UrlClientFacade $urlClientFacade, CacheRepository $storageRepository)
     {
         $this->urlClientFacade = $urlClientFacade;
         $this->storageRepository = $storageRepository;

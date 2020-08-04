@@ -2,6 +2,7 @@
 
 namespace Task\Command;
 
+use Psr\Log\LoggerInterface;
 use Task\Log\InlineLog;
 use Task\Service\File\ReaderService;
 use Task\Service\TransactionCommissionService;
@@ -19,7 +20,7 @@ class TransactionCommissionsCommand
     private $transactionCommissionService;
 
     /**
-     * @var InlineLog
+     * @var LoggerInterface
      */
     private $log;
 

@@ -3,9 +3,10 @@
 namespace Task\Repository;
 
 use Task\Exception\NotFoundException;
+use Task\Exception\UrlClientException;
 use Task\Facade\UrlClientFacade;
 
-class ExchangeRateRepository
+class ExchangeRateRepository implements ExchangeRateRepositoryInterface
 {
     private const URL = 'https://api.exchangeratesapi.io/latest';
 
@@ -15,7 +16,7 @@ class ExchangeRateRepository
     private $urlClientFacade;
 
     /**
-     * @var StorageRepository
+     * @var CacheRepository
      */
     private $storageRepository;
 
@@ -23,7 +24,7 @@ class ExchangeRateRepository
      * BinListRepository constructor.
      * @param UrlClientFacade $urlClientFacade
      */
-    public function __construct(UrlClientFacade $urlClientFacade, StorageRepository $storageRepository)
+    public function __construct(UrlClientFacade $urlClientFacade, CacheRepository $storageRepository)
     {
         $this->urlClientFacade = $urlClientFacade;
         $this->storageRepository = $storageRepository;
@@ -34,7 +35,7 @@ class ExchangeRateRepository
      * @param string $currency
      * @return float
      * @throws NotFoundException
-     * @throws \Task\Exception\UrlClientException
+     * @throws UrlClientException
      */
     public function getRate(string $currency): float
     {

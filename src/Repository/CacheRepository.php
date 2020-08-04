@@ -4,7 +4,7 @@ namespace Task\Repository;
 
 use Task\Exception\NotFoundException;
 
-class StorageRepository
+class CacheRepository implements CacheRepositoryInterface
 {
     /**
      * @var array
