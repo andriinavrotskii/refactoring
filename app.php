@@ -18,6 +18,4 @@ $container = $containerBuilder
 
 $command = $container->get(Task\Command\TransactionCommissionsCommand::class);
 
-list($script, $param) = $argv;
-
-$command->run(__DIR__ . '/' .$param);
+$command->run($argv[1]);
