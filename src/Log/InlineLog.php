@@ -23,9 +23,9 @@ class InlineLog implements LoggerInterface
 
     public function error($message, array $context = array())
     {
-        echo "\n"
-            . (new \DateTimeImmutable())->format('Y-m-d H:i:s')
-            .$message;
+        echo (new \DateTimeImmutable())->format('Y-m-d H:i:s')
+            . $message
+            . "\n";
     }
 
     public function warning($message, array $context = array())
@@ -40,7 +40,7 @@ class InlineLog implements LoggerInterface
 
     public function info($message, array $context = array())
     {
-        echo "\n" . $message;
+        echo $message . "\n";
     }
 
     public function debug($message, array $context = array())

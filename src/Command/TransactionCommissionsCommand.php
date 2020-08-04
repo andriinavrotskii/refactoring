@@ -44,9 +44,8 @@ class TransactionCommissionsCommand
                 as $dto
             ) {
                 $result = $this->transactionCommissionService->process($dto);
-                $this->log->info($result->getAmount());
+                $this->log->info($result);
             }
-
         } catch (\Throwable $exception) {
             $this->log->error($exception->getMessage());
         }

@@ -34,21 +34,21 @@ class TransactionCommissionService
 
     /**
      * @param InputTransactionsDTO $dto
-     * @return Money
+     * @return float
      * @throws \Task\Exception\NotFoundException
      * @throws \Task\Exception\UrlClientException
      */
-    public function process(InputTransactionsDTO $dto): Money
+    public function process(InputTransactionsDTO $dto): float
     {
         $rate = $this->exchangeRateRepository->getRate($dto->getMoney()->getCurrency());
         $isEu = $this->isEu($dto);
 
-        $resultAmount = $dto->getMoney()->multiply($rate);
+        $resultAmount = $dto->getMoney()->getAmount() / $rate;
 
         if (true === $isEu) {
-            $resultAmount = $resultAmount->multiply(self::COEFFICIENT_EU);
+            $resultAmount = $resultAmount * self::COEFFICIENT_EU;
         } else {
-            $resultAmount = $resultAmount->multiply(self::COEFFICIENT_NON_EU);
+            $resultAmount = $resultAmount * self::COEFFICIENT_NON_EU;
         }
 
         return $resultAmount;

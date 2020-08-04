@@ -17,7 +17,8 @@ foreach (explode("\n", file_get_contents($argv[1])) as $row) {
     $r = json_decode($binResults);
     $isEu = isEu($r->country->alpha2);
 
-        $rate = @json_decode(file_get_contents('https://api.exchangeratesapi.io/latest'), true)['rates'][$value[2]];
+    echo "--- " . $value[1] . ' - ' . $value[2] . "\n";
+    $rate = @json_decode(file_get_contents('https://api.exchangeratesapi.io/latest'), true)['rates'][$value[2]];
     if ($value[2] == 'EUR' or $rate == 0) {
         $amntFixed = $value[1];
     }
