@@ -46,11 +46,9 @@ class TransactionCommissionService
     public function process(InputTransactionsDTO $dto): float
     {
         $rate = $this->exchangeRateRepository->getRate($dto->getMoney()->getCurrency());
-        $isEu = $this->isEu($dto->getBin());
-
         $resultAmount = $dto->getMoney()->getAmount() / $rate;
 
-        if (true === $isEu) {
+        if ($this->isEu($dto->getBin())) {
             $resultAmount = $resultAmount * self::COEFFICIENT_EU;
         } else {
             $resultAmount = $resultAmount * self::COEFFICIENT_NON_EU;
@@ -69,6 +67,6 @@ class TransactionCommissionService
     {
         $alpha2 = $this->binlistRepository->getAlpha2($bin);
 
-        return CounryCodeEnum::hasValue($alpha2);
+        return CounryCodeEnum::hasValue($alpha2->getValue());
     }
 }
