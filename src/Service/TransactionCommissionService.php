@@ -2,14 +2,11 @@
 
 namespace Task\Service;
 
-use Money\Money;
 use Task\DTO\InputTransactionsDTO;
 use Task\Enum\CounryCodeEnum;
 use Task\Exception\NotFoundException;
 use Task\Exception\UrlClientException;
-use Task\Repository\BinListRepository;
 use Task\Repository\BinListRepositoryInterface;
-use Task\Repository\ExchangeRateRepository;
 use Task\Repository\ExchangeRateRepositoryInterface;
 use Task\ValueObject\Bin;
 
@@ -28,6 +25,11 @@ class TransactionCommissionService
      */
     private $exchangeRateRepository;
 
+    /**
+     * TransactionCommissionService constructor.
+     * @param BinListRepositoryInterface $binlistRepository
+     * @param ExchangeRateRepositoryInterface $exchangeRateRepository
+     */
     public function __construct(
         BinListRepositoryInterface $binlistRepository,
         ExchangeRateRepositoryInterface $exchangeRateRepository
@@ -46,7 +48,7 @@ class TransactionCommissionService
     public function process(InputTransactionsDTO $dto): float
     {
         $rate = $this->exchangeRateRepository->getRate($dto->getMoney()->getCurrency());
-        $resultAmount = $dto->getMoney()->getAmount() / $rate;
+        $resultAmount = $dto->getMoney()->getAmount() / $rate->getValue();
 
         if ($this->isEu($dto->getBin())) {
             $resultAmount = $resultAmount * self::COEFFICIENT_EU;

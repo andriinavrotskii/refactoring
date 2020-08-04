@@ -2,9 +2,11 @@
 
 namespace Task\Repository;
 
+use Money\Currency;
 use Task\Exception\NotFoundException;
 use Task\Exception\UrlClientException;
 use Task\Facade\UrlClientFacade;
+use Task\ValueObject\Rate;
 
 class ExchangeRateRepository implements ExchangeRateRepositoryInterface
 {
@@ -16,57 +18,49 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
     private $urlClientFacade;
 
     /**
-     * @var CacheRepository
-     */
-    private $storageRepository;
-
-    /**
      * ExchangeRateRepository constructor.
      * @param UrlClientFacade $urlClientFacade
-     * @param CacheRepository $storageRepository
      */
-    public function __construct(UrlClientFacade $urlClientFacade, CacheRepository $storageRepository)
+    public function __construct(UrlClientFacade $urlClientFacade)
     {
         $this->urlClientFacade = $urlClientFacade;
-        $this->storageRepository = $storageRepository;
     }
 
     /**
      *
-     * @param string $currency
-     * @return float
+     * @param Currency $currency
+     * @return Rate
      * @throws NotFoundException
      * @throws UrlClientException
      */
-    public function getRate(string $currency): float
+    public function getRate(Currency $currency): Rate
     {
-        if ($this->storageRepository->isKeyExists($currency)) {
-            $rate = $this->storageRepository->getFromStorage($currency);
+        $currencyValue = $currency->getCode();
+        $rates = json_decode($this->urlClientFacade->executeGetRequest(self::URL));
+
+        if (isset($rates->base) && $currencyValue === $rates->base) {
+            $rate = (float) 1;
         } else {
-            $rate = $this->getRateFromSource($currency);
-            $this->storageRepository->setToStorage($currency, $rate);
+            $this->validate($rates, $currencyValue);
+            $rate = $rates->rates->$currencyValue;
         }
 
-        return $rate;
+        return new Rate($rate);
     }
 
     /**
-     * @param string $currency
-     * @return float
+     * @param \stdClass $rates
+     * @param string $currencyValue
      * @throws NotFoundException
-     * @throws UrlClientException
      */
-    private function getRateFromSource(string $currency): float
+    private function validate(\stdClass $rates, string $currencyValue): void
     {
-        $data = $this->urlClientFacade->executeGetRequest(self::URL);
-        $obj = json_decode($data);
-
-        if (isset($obj->base) && $currency === $obj->base) {
-            return (float) 1;
-        }
-
-        if (isset($obj->rates->$currency) && !empty($obj->rates->$currency) && is_float($obj->rates->$currency)) {
-            return $obj->rates->$currency;
+        if (
+            isset($rates->rates->$currencyValue)
+            && !empty($rates->rates->$currencyValue)
+            && is_float($rates->rates->$currencyValue)
+        ) {
+            return;
         }
 
         throw new NotFoundException('Rate is not found');

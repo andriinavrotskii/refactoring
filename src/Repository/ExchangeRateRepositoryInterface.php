@@ -2,17 +2,19 @@
 
 namespace Task\Repository;
 
+use Money\Currency;
 use Task\Exception\NotFoundException;
 use Task\Exception\UrlClientException;
+use Task\ValueObject\Rate;
 
 interface ExchangeRateRepositoryInterface
 {
     /**
      *
-     * @param string $currency
+     * @param Currency $currency
      * @return float
      * @throws NotFoundException
      * @throws UrlClientException
      */
-    public function getRate(string $currency): float;
+    public function getRate(Currency $currency): Rate;
 }

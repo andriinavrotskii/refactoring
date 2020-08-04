@@ -2,16 +2,16 @@
 
 namespace Task\ValueObject;
 
-class Alpha2
+class Rate
 {
     /**
-     * @var string
+     * @var float
      */
     private $value;
 
     /**
-     * Alpha2 constructor.
-     * @param string $value
+     * Rate constructor.
+     * @param float $value
      */
     public function __construct($value)
     {
@@ -19,9 +19,9 @@ class Alpha2
     }
 
     /**
-     * @return string
+     * @return float
      */
-    public function getValue(): string
+    public function getValue(): float
     {
         return $this->value;
     }
