@@ -21,8 +21,9 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
     private $storageRepository;
 
     /**
-     * BinListRepository constructor.
+     * ExchangeRateRepository constructor.
      * @param UrlClientFacade $urlClientFacade
+     * @param CacheRepository $storageRepository
      */
     public function __construct(UrlClientFacade $urlClientFacade, CacheRepository $storageRepository)
     {
@@ -53,7 +54,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
      * @param string $currency
      * @return float
      * @throws NotFoundException
-     * @throws \Task\Exception\UrlClientException
+     * @throws UrlClientException
      */
     private function getRateFromSource(string $currency): float
     {
