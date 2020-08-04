@@ -2,27 +2,9 @@
 
 namespace Task\ValueObject;
 
-class Alpha2
+use Task\ValueObject\Base\StringValueObject;
+
+class Alpha2 extends StringValueObject
 {
-    /**
-     * @var string
-     */
-    private $value;
-
-    /**
-     * Alpha2 constructor.
-     * @param string $value
-     */
-    public function __construct($value)
-    {
-        $this->value = $value;
-    }
-
-    /**
-     * @return string
-     */
-    public function getValue(): string
-    {
-        return $this->value;
-    }
+    //
 }

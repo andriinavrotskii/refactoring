@@ -10,6 +10,6 @@ class EmptyArgumentException extends \Exception
      */
     public function __construct(string $argument)
     {
-        parent::__construct('Empty argunet: ' . $argument);
+        parent::__construct('Empty argument: ' . $argument);
     }
 }
