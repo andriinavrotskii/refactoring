@@ -15,15 +15,46 @@ class ExchangeRateRepository
     private $urlClientFacade;
 
     /**
+     * @var StorageRepository
+     */
+    private $storageRepository;
+
+    /**
      * BinListRepository constructor.
      * @param UrlClientFacade $urlClientFacade
      */
-    public function __construct(UrlClientFacade $urlClientFacade)
+    public function __construct(UrlClientFacade $urlClientFacade, StorageRepository $storageRepository)
     {
         $this->urlClientFacade = $urlClientFacade;
+        $this->storageRepository = $storageRepository;
     }
 
+    /**
+     *
+     * @param string $currency
+     * @return float
+     * @throws NotFoundException
+     * @throws \Task\Exception\UrlClientException
+     */
     public function getRate(string $currency): float
+    {
+        if ($this->storageRepository->isKeyExists($currency)) {
+            $rate = $this->storageRepository->getFromStorage($currency);
+        } else {
+            $rate = $this->getRateFromSource($currency);
+            $this->storageRepository->setToStorage($currency, $rate);
+        }
+
+        return $rate;
+    }
+
+    /**
+     * @param string $currency
+     * @return float
+     * @throws NotFoundException
+     * @throws \Task\Exception\UrlClientException
+     */
+    private function getRateFromSource(string $currency): float
     {
         $data = $this->urlClientFacade->executeGetRequest(self::URL);
         $obj = json_decode($data);
@@ -35,7 +66,6 @@ class ExchangeRateRepository
         if (isset($obj->rates->$currency) && !empty($obj->rates->$currency) && is_float($obj->rates->$currency)) {
             return $obj->rates->$currency;
         }
-
 
         throw new NotFoundException('Rate is not found');
     }

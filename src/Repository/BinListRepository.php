@@ -17,12 +17,19 @@ class BinListRepository
     private $urlClientFacade;
 
     /**
+     * @var StorageRepository
+     */
+    private $storageRepository;
+
+    /**
      * BinListRepository constructor.
      * @param UrlClientFacade $urlClientFacade
+     * @param StorageRepository $storageRepository
      */
-    public function __construct(UrlClientFacade $urlClientFacade)
+    public function __construct(UrlClientFacade $urlClientFacade, StorageRepository $storageRepository)
     {
         $this->urlClientFacade = $urlClientFacade;
+        $this->storageRepository = $storageRepository;
     }
 
     /**
@@ -32,6 +39,24 @@ class BinListRepository
      * @throws UrlClientException
      */
     public function getAlpha2(Bin $bin): string
+    {
+        if ($this->storageRepository->isKeyExists($bin->getValue())) {
+            $alpha2 = $this->storageRepository->getFromStorage($bin->getValue());
+        } else {
+            $alpha2 = $this->getAlpha2FromSource($bin);
+            $this->storageRepository->setToStorage($bin->getValue(), $alpha2);
+        }
+
+        return $alpha2;
+    }
+
+    /**
+     * @param Bin $bin
+     * @return string
+     * @throws NotFoundException
+     * @throws UrlClientException
+     */
+    private function getAlpha2FromSource(Bin $bin): string
     {
         $data = $this->urlClientFacade->executeGetRequest(self::URL . $bin->getValue());
         $obj = json_decode($data);
