@@ -5,6 +5,7 @@ namespace Task\Service;
 use Task\DTO\InputTransactionsDTO;
 use Task\Enum\CounryCodeEnum;
 use Task\Exception\NotFoundException;
+use Task\Exception\TransactionCommissionServiceException;
 use Task\Exception\UrlClientException;
 use Task\Repository\BinListRepositoryInterface;
 use Task\Repository\ExchangeRateRepositoryInterface;
@@ -42,21 +43,27 @@ class TransactionCommissionService
     /**
      * @param InputTransactionsDTO $dto
      * @return float
-     * @throws NotFoundException
-     * @throws UrlClientException
+     * @throws TransactionCommissionServiceException
      */
     public function process(InputTransactionsDTO $dto): float
     {
-        $rate = $this->exchangeRateRepository->getRate($dto->getMoney()->getCurrency());
-        $resultAmount = $dto->getMoney()->getAmount() / $rate->getValue();
+        try {
+            $rate = $this->exchangeRateRepository->getRate($dto->getMoney()->getCurrency());
+            $resultAmount = $dto->getMoney()->getAmount() / $rate->getValue();
 
-        if ($this->isEu($dto->getBin())) {
-            $resultAmount = $resultAmount * self::COEFFICIENT_EU;
-        } else {
-            $resultAmount = $resultAmount * self::COEFFICIENT_NON_EU;
+            if ($this->isEu($dto->getBin())) {
+                $resultAmount = $resultAmount * self::COEFFICIENT_EU;
+            } else {
+                $resultAmount = $resultAmount * self::COEFFICIENT_NON_EU;
+            }
+
+            return $resultAmount;
+        } catch (\Throwable $exception) {
+            throw new TransactionCommissionServiceException(
+                'TransactionCommissionService failed. Reason: ' . $exception->getMessage(),
+                $exception
+            );
         }
-
-        return $resultAmount;
     }
 
     /**
