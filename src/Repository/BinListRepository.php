@@ -5,6 +5,7 @@ namespace Task\Repository;
 use Task\Exception\NotFoundException;
 use Task\Exception\UrlClientException;
 use Task\Facade\UrlClientFacade;
+use Task\ValueObject\Bin;
 
 class BinListRepository
 {
@@ -25,14 +26,14 @@ class BinListRepository
     }
 
     /**
-     * @param $param
+     * @param Bin $bin
      * @return string
      * @throws NotFoundException
      * @throws UrlClientException
      */
-    public function getAlpha2($param): string
+    public function getAlpha2(Bin $bin): string
     {
-        $data = $this->urlClientFacade->executeGetRequest(self::URL . $param );
+        $data = $this->urlClientFacade->executeGetRequest(self::URL . $bin->getValue());
         $obj = json_decode($data);
 
         if (!isset($obj->country->alpha2) || empty($obj->country->alpha2)) {

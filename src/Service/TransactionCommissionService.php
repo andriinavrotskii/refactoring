@@ -7,6 +7,7 @@ use Task\DTO\InputTransactionsDTO;
 use Task\Enum\CounryCodeEnum;
 use Task\Repository\BinListRepository;
 use Task\Repository\ExchangeRateRepository;
+use Task\ValueObject\Bin;
 
 class TransactionCommissionService
 {
@@ -41,7 +42,7 @@ class TransactionCommissionService
     public function process(InputTransactionsDTO $dto): float
     {
         $rate = $this->exchangeRateRepository->getRate($dto->getMoney()->getCurrency());
-        $isEu = $this->isEu($dto);
+        $isEu = $this->isEu($dto->getBin());
 
         $resultAmount = $dto->getMoney()->getAmount() / $rate;
 
@@ -55,14 +56,14 @@ class TransactionCommissionService
     }
 
     /**
-     * @param InputTransactionsDTO $dto
+     * @param Bin $bin
      * @return bool
      * @throws \Task\Exception\NotFoundException
      * @throws \Task\Exception\UrlClientException
      */
-    public function isEu(InputTransactionsDTO $dto): bool
+    public function isEu(Bin $bin): bool
     {
-        $alpha2 = $this->binlistRepository->getAlpha2($dto->getBin());
+        $alpha2 = $this->binlistRepository->getAlpha2($bin);
 
         return CounryCodeEnum::hasValue($alpha2);
     }

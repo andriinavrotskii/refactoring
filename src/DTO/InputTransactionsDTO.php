@@ -3,11 +3,12 @@
 namespace Task\DTO;
 
 use Money\Money;
+use Task\ValueObject\Bin;
 
 class InputTransactionsDTO
 {
     /**
-     * @var int
+     * @var Bin
      */
     private $bin;
 
@@ -19,11 +20,11 @@ class InputTransactionsDTO
     /**
      * InputTransactionsDTO constructor.
      *
-     * @param int   $bin
+     * @param Bin   $bin
      * @param Money $money
      */
     public function __construct(
-        int $bin,
+        Bin $bin,
         Money $money
     ) {
         $this->bin = $bin;
@@ -31,9 +32,9 @@ class InputTransactionsDTO
     }
 
     /**
-     * @return int
+     * @return Bin
      */
-    public function getBin(): int
+    public function getBin(): Bin
     {
         return $this->bin;
     }
