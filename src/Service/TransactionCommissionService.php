@@ -19,7 +19,7 @@ class TransactionCommissionService
     /**
      * @var BinListRepositoryInterface
      */
-    private $binlistRepository;
+    private $binListRepository;
 
     /**
      * @var ExchangeRateRepositoryInterface
@@ -28,15 +28,15 @@ class TransactionCommissionService
 
     /**
      * TransactionCommissionService constructor.
-     * @param BinListRepositoryInterface $binlistRepository
+     * @param BinListRepositoryInterface $binListRepository
      * @param ExchangeRateRepositoryInterface $exchangeRateRepository
      */
     public function __construct(
-        BinListRepositoryInterface $binlistRepository,
+        BinListRepositoryInterface $binListRepository,
         ExchangeRateRepositoryInterface $exchangeRateRepository
     ) {
 
-        $this->binlistRepository = $binlistRepository;
+        $this->binListRepository = $binListRepository;
         $this->exchangeRateRepository = $exchangeRateRepository;
     }
 
@@ -72,9 +72,9 @@ class TransactionCommissionService
      * @throws NotFoundException
      * @throws UrlClientException
      */
-    public function isEu(Bin $bin): bool
+    private function isEu(Bin $bin): bool
     {
-        $alpha2 = $this->binlistRepository->getAlpha2($bin);
+        $alpha2 = $this->binListRepository->getAlpha2($bin);
 
         return CounryCodeEnum::hasValue($alpha2->getValue());
     }

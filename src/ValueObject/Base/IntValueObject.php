@@ -4,8 +4,9 @@ namespace Task\ValueObject\Base;
 
 use Task\Exception\EmptyArgumentException;
 use Task\Exception\NotFloatArgumentException;
+use Task\Exception\NotIntArgumentException;
 
-class FloatValueObject
+class IntValueObject
 {
     /**
      * @var float
@@ -23,8 +24,8 @@ class FloatValueObject
             throw new EmptyArgumentException(get_called_class());
         }
 
-        if (!is_float($value)) {
-            throw new NotFloatArgumentException(get_called_class());
+        if (!is_integer($value)) {
+            throw new NotIntArgumentException(get_called_class());
         }
 
         $this->value = $value;

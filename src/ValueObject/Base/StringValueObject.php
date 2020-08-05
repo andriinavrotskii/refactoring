@@ -20,7 +20,7 @@ class StringValueObject
     public function __construct($value)
     {
         if (empty($value)) {
-            throw new EmptyArgumentException('bin');
+            throw new EmptyArgumentException();
         }
 
         if (!is_string($value)) {
