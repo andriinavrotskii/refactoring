@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Task\Repository;
 
 use Money\Currency;
@@ -27,11 +29,12 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface
     }
 
     /**
-     *
      * @param Currency $currency
      * @return Rate
      * @throws NotFoundException
      * @throws UrlClientException
+     * @throws \Task\Exception\EmptyArgumentException
+     * @throws \Task\Exception\NotFloatArgumentException
      */
     public function getRate(Currency $currency): Rate
     {

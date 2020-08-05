@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Task\Service;
 
 use Task\DTO\InputTransactionsDTO;

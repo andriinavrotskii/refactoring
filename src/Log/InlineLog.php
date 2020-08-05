@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Task\Log;
 
 use Psr\Log\LoggerInterface;
@@ -24,6 +26,7 @@ class InlineLog implements LoggerInterface
     public function error($message, array $context = array())
     {
         echo (new \DateTimeImmutable())->format('Y-m-d H:i:s')
+            . ' '
             . $message
             . "\n";
     }

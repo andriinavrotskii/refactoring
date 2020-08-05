@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Task\Command;
 
 use Psr\Log\LoggerInterface;
@@ -24,6 +26,12 @@ class TransactionCommissionsCommand
      */
     private $log;
 
+    /**
+     * TransactionCommissionsCommand constructor.
+     * @param ReaderService $readerService
+     * @param TransactionCommissionService $transactionCommissionService
+     * @param InlineLog $log
+     */
     public function __construct(
         ReaderService $readerService,
         TransactionCommissionService $transactionCommissionService,
@@ -39,16 +47,13 @@ class TransactionCommissionsCommand
      */
     public function run(string $fileWithInputData): void
     {
-        try {
-            foreach (
-                $this->readerService->readTransactionCommission($fileWithInputData)
-                as $dto
-            ) {
+        foreach ($this->readerService->readTransactionCommission($fileWithInputData) as $dto) {
+            try {
                 $result = $this->transactionCommissionService->process($dto);
                 $this->log->info($result);
+            } catch (\Throwable $exception) {
+                $this->log->error($exception->getMessage());
             }
-        } catch (\Throwable $exception) {
-            $this->log->error($exception->getMessage());
         }
     }
 }
